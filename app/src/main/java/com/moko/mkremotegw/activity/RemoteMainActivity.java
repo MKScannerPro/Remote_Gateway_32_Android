@@ -16,6 +16,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.moko.mkremotegw.AppConstants;
 import com.moko.mkremotegw.BuildConfig;
 import com.moko.mkremotegw.R;
@@ -24,8 +28,11 @@ import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.ActivityMainRemoteBinding;
 import com.moko.mkremotegw.db.DBTools;
 import com.moko.mkremotegw.dialog.AlertMessageDialog;
+import com.moko.mkremotegw.dialog.LoginDialog;
 import com.moko.mkremotegw.entity.MQTTConfig;
 import com.moko.mkremotegw.entity.MokoDevice;
+import com.moko.mkremotegw.net.Urls;
+import com.moko.mkremotegw.net.entity.CommonResp;
 import com.moko.mkremotegw.utils.SPUtiles;
 import com.moko.mkremotegw.utils.ToastUtils;
 import com.moko.mkremotegw.utils.Utils;
@@ -68,6 +75,8 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
     private MQTTConfig mAppMqttConfig;
 
     public static String PATH_LOGCAT;
+
+    public static String mAccessToken;
 
     @Override
     protected void onCreate() {
@@ -296,6 +305,62 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
             ToastUtils.showToast(this, String.format("SSID:%s, the network cannot available,please check", ssid));
             XLog.i(String.format("SSID:%s, the network cannot available,please check", ssid));
         }
+    }
+
+    public void mainSyncDevices(View view) {
+        if (isWindowLocked()) return;
+        if (devices.isEmpty()) {
+            ToastUtils.showToast(this, "Add devices first");
+            return;
+        }
+        // 登录
+        String account = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
+        String password = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
+        if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
+            LoginDialog dialog = new LoginDialog();
+            dialog.setOnLoginClicked(this::login);
+            dialog.show(getSupportFragmentManager());
+            return;
+        }
+        login(account, password);
+    }
+
+    private void login(String account, String password) {
+        OkGo.<String>post(Urls.URL_LOGIN)
+                .params("username", account)
+                .params("password", password)
+                .params("source", 1)
+                .execute(new StringCallback() {
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        showLoadingProgressDialog();
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Type type = new TypeToken<CommonResp<JsonObject>>() {
+                        }.getType();
+                        CommonResp<JsonObject> commonResp = new Gson().fromJson(response.body(), type);
+                        if (commonResp.code != 200) {
+                            ToastUtils.showToast(RemoteMainActivity.this, commonResp.msg);
+                            return;
+                        }
+
+                        mAccessToken = commonResp.data.get("access_token").getAsString();
+                        startActivity(new Intent(RemoteMainActivity.this, SyncDeviceActivity.class));
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        ToastUtils.showToast(RemoteMainActivity.this, R.string.request_error);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissLoadingProgressDialog();
+                    }
+                });
     }
 
     @Override

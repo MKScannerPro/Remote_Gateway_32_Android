@@ -48,6 +48,8 @@ public class AppConstants {
     public static final String EXTRA_KEY_DEVICE_PUBLISH_TOPIC = "EXTRA_KEY_DEVICE_PUBLISH_TOPIC";
     public static final String EXTRA_KEY_DEVICE_LWT_ENABLE = "EXTRA_KEY_DEVICE_LWT_ENABLE";
     public static final String EXTRA_KEY_DEVICE_LWT_TOPIC = "EXTRA_KEY_DEVICE_LWT_TOPIC";
+    public static final String EXTRA_KEY_LOGIN_ACCOUNT = "EXTRA_KEY_LOGIN_ACCOUNT";
+    public static final String EXTRA_KEY_LOGIN_PASSWORD = "EXTRA_KEY_LOGIN_PASSWORD";
     // request_code
     public static final int REQUEST_CODE_TEMP_TARGET = 100;
     public static final int REQUEST_CODE_TIMER = 101;
