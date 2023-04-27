@@ -1,6 +1,9 @@
 package com.moko.mkremotegw.net;
 
+import okhttp3.MediaType;
+
 public class Urls {
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     /**
      * 测试环境

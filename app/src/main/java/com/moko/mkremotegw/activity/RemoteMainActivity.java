@@ -29,6 +29,7 @@ import com.moko.mkremotegw.databinding.ActivityMainRemoteBinding;
 import com.moko.mkremotegw.db.DBTools;
 import com.moko.mkremotegw.dialog.AlertMessageDialog;
 import com.moko.mkremotegw.dialog.LoginDialog;
+import com.moko.mkremotegw.entity.LoginEntity;
 import com.moko.mkremotegw.entity.MQTTConfig;
 import com.moko.mkremotegw.entity.MokoDevice;
 import com.moko.mkremotegw.net.Urls;
@@ -65,6 +66,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import okhttp3.RequestBody;
 
 public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
 
@@ -326,10 +328,13 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
     }
 
     private void login(String account, String password) {
+        LoginEntity entity = new LoginEntity();
+        entity.username = account;
+        entity.password = password;
+        entity.source = 1;
+        RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(entity));
         OkGo.<String>post(Urls.URL_LOGIN)
-                .params("username", account)
-                .params("password", password)
-                .params("source", 1)
+                .upRequestBody(body)
                 .execute(new StringCallback() {
 
                     @Override
@@ -346,7 +351,8 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
                             ToastUtils.showToast(RemoteMainActivity.this, commonResp.msg);
                             return;
                         }
-
+                        SPUtiles.setStringValue(RemoteMainActivity.this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, account);
+                        SPUtiles.setStringValue(RemoteMainActivity.this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, password);
                         mAccessToken = commonResp.data.get("access_token").getAsString();
                         startActivity(new Intent(RemoteMainActivity.this, SyncDeviceActivity.class));
                     }

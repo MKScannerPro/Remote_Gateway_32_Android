@@ -23,12 +23,17 @@ import com.moko.mkremotegw.net.Urls;
 import com.moko.mkremotegw.net.entity.CommonResp;
 import com.moko.mkremotegw.net.entity.SyncDevice;
 import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.support.remotegw.event.MQTTConnectionCompleteEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import okhttp3.RequestBody;
 
 public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> implements BaseQuickAdapter.OnItemClickListener {
 
@@ -78,8 +83,9 @@ public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> imp
     }
 
     private void syncDevices(List<SyncDevice> syncDevices) {
+        RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(syncDevices));
         OkGo.<String>post(Urls.URL_SYNC_GATEWAY)
-                .upJson(new Gson().toJson(syncDevices))
+                .upRequestBody(body)
                 .headers("Authorization", RemoteMainActivity.mAccessToken)
                 .execute(new StringCallback() {
 
@@ -145,5 +151,9 @@ public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> imp
             back();
         });
         dialog.show(getSupportFragmentManager());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMQTTConnectionCompleteEvent(MQTTConnectionCompleteEvent event) {
     }
 }
