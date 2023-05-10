@@ -8,7 +8,7 @@ public class Urls {
     /**
      * 测试环境
      */
-    private static final String HOST_URL = "http://192.168.0.115/prod-api/";
+    private static final String HOST_URL = "http://121.199.17.190/prod-api/";
     /**
      * 正式环境
      */
