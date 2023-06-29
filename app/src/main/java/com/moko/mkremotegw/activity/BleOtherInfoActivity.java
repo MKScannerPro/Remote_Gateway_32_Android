@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.mkremotegw.AppConstants;
 import com.moko.mkremotegw.R;
 import com.moko.mkremotegw.adapter.BleCharacteristicsAdapter;
@@ -41,6 +42,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -99,6 +104,8 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
     protected ActivityOtherInfoBinding getViewBinding() {
         return ActivityOtherInfoBinding.inflate(getLayoutInflater());
     }
+
+    private String unlockPayload;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMQTTMessageArrivedEvent(MQTTMessageArrivedEvent event) {
@@ -159,6 +166,10 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
                 if (bleOtherChar.type == 1
                         && charResponse.service_uuid.equalsIgnoreCase(bleOtherChar.serviceUUID)
                         && charResponse.char_uuid.equalsIgnoreCase(bleOtherChar.characteristicUUID)) {
+                    if (charResponse.char_uuid.equalsIgnoreCase("a3c875078ed34bdf8a39a01bebede295")) {
+                        // BXP-D设备UNLOCK特征，记录读回来的随机值
+                        unlockPayload = charResponse.payload;
+                    }
                     bleOtherChar.characteristicPayload = charResponse.payload;
                     break;
                 }
@@ -320,6 +331,10 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
     }
 
     private void openWriteCharValueDialog(BleOtherChar bleOtherChar, String payload) {
+        if (bleOtherChar.characteristicUUID.equalsIgnoreCase("a3c875078ed34bdf8a39a01bebede295")) {
+            // BXP-D设备UNLOCK特征，用读回来的随机值加密输入的值
+            payload = MokoUtils.bytesToHexString(encrypt(MokoUtils.hex2bytes(unlockPayload), MokoUtils.hex2bytes(payload)));
+        }
         int msgId = MQTTConstants.CONFIG_MSG_ID_BLE_OTHER_WRITE_CHAR_VALUE;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("mac", bleOtherChar.mac);
@@ -332,6 +347,20 @@ public class BleOtherInfoActivity extends BaseActivity<ActivityOtherInfoBinding>
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    public byte[] encrypt(byte[] value, byte[] password) {
+        try {
+            SecretKeySpec key = new SecretKeySpec(password, "AES");// 转换为AES专用密钥
+            Cipher cipher = Cipher.getInstance("AES");// 创建密码器
+            cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化为加密模式的密码器
+            byte[] result = cipher.doFinal(value);// 加密
+            byte[] data = Arrays.copyOf(result, 16);
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void readCharValue(BleOtherChar bleOtherChar) {
