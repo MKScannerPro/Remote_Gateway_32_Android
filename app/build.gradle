@@ -14,8 +14,8 @@ android {
         }
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 104
+        versionName "1.0.4"
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "MKRemoteGW_${versionName}_${formatDate}")
     }
