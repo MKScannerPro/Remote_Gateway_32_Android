@@ -44,6 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
@@ -116,11 +117,14 @@ public class DeviceScannerActivity extends BaseActivity<ActivityScannerBinding> 
     public void onScanDevice(DeviceInfo deviceInfo) {
         ScanResult scanResult = deviceInfo.scanResult;
         ScanRecord scanRecord = scanResult.getScanRecord();
+        if (null == scanRecord) return;
         Map<ParcelUuid, byte[]> map = scanRecord.getServiceData();
         if (map == null || map.isEmpty()) return;
         byte[] data = map.get(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()));
         if (data == null || data.length != 1) return;
         deviceInfo.deviceType = data[0] & 0xFF;
+        if (deviceInfo.deviceType != 0x00 && deviceInfo.deviceType != 0x10 && deviceInfo.deviceType != 0x20 && deviceInfo.deviceType != 0x30)
+            return;
         mDeviceMap.put(deviceInfo.mac, deviceInfo);
     }
 

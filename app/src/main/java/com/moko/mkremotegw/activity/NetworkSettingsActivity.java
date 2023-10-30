@@ -1,6 +1,9 @@
 package com.moko.mkremotegw.activity;
 
+import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -22,16 +25,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSettingsBinding> {
-
-    private final String IP_REGEX = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))*";
-
     private boolean mSavedParamsError;
-
-    private Pattern pattern;
 
     @Override
     protected ActivityNetworkSettingsBinding getViewBinding() {
@@ -40,10 +36,7 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
 
     @Override
     protected void onCreate() {
-        pattern = Pattern.compile(IP_REGEX);
-        mBind.cbDhcp.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mBind.clIp.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-        });
+        mBind.cbDhcp.setOnCheckedChangeListener((buttonView, isChecked) -> mBind.clIp.setVisibility(isChecked ? View.GONE : View.VISIBLE));
         showLoadingProgressDialog();
         mBind.tvTitle.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
@@ -109,8 +102,7 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
                                 }
                             }
                             if (flag == 0x00) {
-                                if (length == 0)
-                                    return;
+                                if (length == 0) return;
                                 // read
                                 switch (configKeyEnum) {
                                     case KEY_NETWORK_DHCP:
@@ -134,7 +126,6 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
                                             mBind.etDns.setText(dns);
                                         }
                                         break;
-
                                 }
                             }
                         }
@@ -155,21 +146,43 @@ public class NetworkSettingsActivity extends BaseActivity<ActivityNetworkSetting
 
     private boolean isParaError() {
         if (!mBind.cbDhcp.isChecked()) {
+            if (TextUtils.isEmpty(mBind.etIp.getText()) || TextUtils.isEmpty(mBind.etMask.getText()) ||
+                    TextUtils.isEmpty(mBind.etGateway.getText()) || TextUtils.isEmpty(mBind.etDns.getText())) {
+                return true;
+            }
             String ip = mBind.etIp.getText().toString();
             String mask = mBind.etMask.getText().toString();
             String gateway = mBind.etGateway.getText().toString();
             String dns = mBind.etDns.getText().toString();
-            Matcher matcherIp = pattern.matcher(ip);
-            Matcher matcherMask = pattern.matcher(mask);
-            Matcher matcherGateway = pattern.matcher(gateway);
-            Matcher matcherDns = pattern.matcher(dns);
-            if (!matcherIp.matches()
-                    || !matcherMask.matches()
-                    || !matcherGateway.matches()
-                    || !matcherDns.matches())
+            int[] ipArray = getIp(ip);
+            int[] maskArray = getIp(mask);
+            int[] gatewayArray = getIp(gateway);
+            int[] dnsArray = getIp(dns);
+            if (null == ipArray || null == gatewayArray || null == maskArray || null == dnsArray)
                 return true;
+            if (isIpError(ipArray)) return true;
+            if (isIpError(maskArray)) return true;
+            if (isIpError(gatewayArray)) return true;
+            if (isIpError(dnsArray)) return true;
         }
         return false;
+    }
+
+    private boolean isIpError(@NonNull int[] array) {
+        for (int arr : array) {
+            if (arr > 255) return true;
+        }
+        return false;
+    }
+
+    private int[] getIp(String ipInfo) {
+        if (TextUtils.isEmpty(ipInfo)) return null;
+        String[] split = ipInfo.split("\\.");
+        if (split.length != 4) return null;
+        for (String str : split) {
+            if (TextUtils.isEmpty(str)) return null;
+        }
+        return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3])};
     }
 
     private void saveParams() {
