@@ -75,7 +75,7 @@ public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> imp
                 syncDevice.publishTopic = device.topicPublish;
                 syncDevice.subscribeTopic = device.topicSubscribe;
                 syncDevice.lastWill = device.lwtTopic;
-                syncDevice.model = "MK110";
+                syncDevice.model = 40;
                 syncDevices.add(syncDevice);
             }
         }
