@@ -8,11 +8,14 @@ public class Urls {
     /**
      * 测试环境
      */
-    private static final String HOST_URL = "http://121.199.17.190/prod-api/";
+    public static final String HOST_URL_TEST = "http://121.199.17.190/prod-api/";
     /**
      * 正式环境
      */
-//    private static final String HOST_URL = "http://erp.mokotechnology.com/api/production/";
+    public static final String HOST_URL_CLOUD = "http://cloud.mokotechnology.com/stage-api/";
+
+
+    public static String HOST_URL = HOST_URL_CLOUD;
 
     /**
      * 生产测试

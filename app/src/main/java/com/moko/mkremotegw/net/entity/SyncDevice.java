@@ -21,5 +21,5 @@ public class SyncDevice implements Serializable {
     // LW003-B 90
     // SGWP-B 100
     // JP 200
-    public int model;
+    public String model;
 }

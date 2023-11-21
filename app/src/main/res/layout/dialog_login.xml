@@ -40,12 +40,39 @@
             android:layout_marginRight="12dp"
             android:focusable="true"
             android:hint="Password"
+            android:inputType="textPassword"
             android:maxLength="16"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="true"
             android:textColorHint="@color/grey_ebebeb"
             android:textSize="13sp" />
+
+
+        <RadioGroup
+            android:id="@+id/rg_env"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <RadioButton
+                android:id="@+id/rb_env_cloud"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:checked="true"
+                android:text="env_cloud" />
+
+            <RadioButton
+                android:id="@+id/rb_env_test"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="env_test" />
+
+        </RadioGroup>
 
         <View
             android:layout_width="match_parent"

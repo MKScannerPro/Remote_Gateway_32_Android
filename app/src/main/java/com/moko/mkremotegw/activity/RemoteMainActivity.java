@@ -318,20 +318,22 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
         // 登录
         String account = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
         String password = SPUtiles.getStringValue(this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
+        int env = SPUtiles.getIntValue(this, AppConstants.EXTRA_KEY_LOGIN_ENV, 0);
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             LoginDialog dialog = new LoginDialog();
             dialog.setOnLoginClicked(this::login);
             dialog.show(getSupportFragmentManager());
             return;
         }
-        login(account, password);
+        login(account, password, env);
     }
 
-    private void login(String account, String password) {
+    private void login(String account, String password, int envValue) {
         LoginEntity entity = new LoginEntity();
         entity.username = account;
         entity.password = password;
         entity.source = 1;
+        Urls.HOST_URL = envValue == 0 ? Urls.HOST_URL_CLOUD : Urls.HOST_URL_TEST;
         RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(entity));
         OkGo.<String>post(Urls.URL_LOGIN)
                 .upRequestBody(body)
@@ -349,10 +351,14 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
                         CommonResp<JsonObject> commonResp = new Gson().fromJson(response.body(), type);
                         if (commonResp.code != 200) {
                             ToastUtils.showToast(RemoteMainActivity.this, commonResp.msg);
+                            LoginDialog dialog = new LoginDialog();
+                            dialog.setOnLoginClicked((account1, password1, env) -> login(account1, password1, env));
+                            dialog.show(getSupportFragmentManager());
                             return;
                         }
                         SPUtiles.setStringValue(RemoteMainActivity.this, AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, account);
                         SPUtiles.setStringValue(RemoteMainActivity.this, AppConstants.EXTRA_KEY_LOGIN_PASSWORD, password);
+                        SPUtiles.setIntValue(RemoteMainActivity.this, AppConstants.EXTRA_KEY_LOGIN_ENV, envValue);
                         mAccessToken = commonResp.data.get("access_token").getAsString();
                         startActivity(new Intent(RemoteMainActivity.this, SyncDeviceActivity.class));
                     }
@@ -360,6 +366,9 @@ public class RemoteMainActivity extends BaseActivity<ActivityMainRemoteBinding> 
                     @Override
                     public void onError(Response<String> response) {
                         ToastUtils.showToast(RemoteMainActivity.this, R.string.request_error);
+                        LoginDialog dialog = new LoginDialog();
+                        dialog.setOnLoginClicked((account12, password12, env) -> login(account12, password12, env));
+                        dialog.show(getSupportFragmentManager());
                     }
 
                     @Override

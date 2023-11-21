@@ -24,8 +24,13 @@ public class LoginDialog extends MokoBaseDialog<DialogLoginBinding> {
     protected void onCreateView() {
         String acc = SPUtiles.getStringValue(getContext(), AppConstants.EXTRA_KEY_LOGIN_ACCOUNT, "");
         String pwd = SPUtiles.getStringValue(getContext(), AppConstants.EXTRA_KEY_LOGIN_PASSWORD, "");
+        int env = SPUtiles.getIntValue(getContext(), AppConstants.EXTRA_KEY_LOGIN_ENV, 0);
         mBind.etAccount.setText(acc);
         mBind.etPassword.setText(pwd);
+        if (env == 0)
+            mBind.rbEnvCloud.setChecked(true);
+        else
+            mBind.rbEnvTest.setChecked(true);
         mBind.tvCancel.setOnClickListener(v -> {
             dismiss();
         });
@@ -33,12 +38,17 @@ public class LoginDialog extends MokoBaseDialog<DialogLoginBinding> {
             String account = mBind.etAccount.getText().toString();
             String password = mBind.etPassword.getText().toString();
             if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
-                ToastUtils.showToast(getContext(),"Cannot be empty!");
+                ToastUtils.showToast(getContext(), "Cannot be empty!");
                 return;
             }
+            int env_confirm = 0;
+            if (mBind.rbEnvCloud.isChecked())
+                env_confirm = 0;
+            if (mBind.rbEnvTest.isChecked())
+                env_confirm = 1;
             dismiss();
             if (loginClickListener != null)
-                loginClickListener.onConfirm(account, password);
+                loginClickListener.onConfirm(account, password, env_confirm);
         });
     }
 
@@ -80,6 +90,6 @@ public class LoginDialog extends MokoBaseDialog<DialogLoginBinding> {
 
     public interface LoginClickListener {
 
-        void onConfirm(String account, String password);
+        void onConfirm(String account, String password, int env);
     }
 }
