@@ -75,7 +75,12 @@ public class SyncDeviceActivity extends BaseActivity<ActivityDevicesBinding> imp
                 syncDevice.publishTopic = device.topicPublish;
                 syncDevice.subscribeTopic = device.topicSubscribe;
                 syncDevice.lastWill = device.lwtTopic;
-                syncDevice.model = "40";
+                if (device.deviceType == 0x10)
+                    syncDevice.model = "40";
+                if (device.deviceType == 0x20)
+                    syncDevice.model = "10";
+                if (device.deviceType == 0x30)
+                    syncDevice.model = "20";
                 syncDevices.add(syncDevice);
             }
         }
