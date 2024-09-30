@@ -14,8 +14,8 @@ android {
         namespace = "com.moko.mkremotegw"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 106
-        versionName "1.0.6"
+        versionCode 107
+        versionName "1.0.7"
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "MKRemoteGW_${versionName}_${formatDate}")
     }
