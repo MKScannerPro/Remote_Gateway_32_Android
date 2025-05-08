@@ -10,13 +10,13 @@ import android.os.SystemClock;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.moko.lib.scannerui.dialog.LoadingDialog;
+import com.moko.lib.scannerui.dialog.LoadingMessageDialog;
 import com.moko.mkremotegw.activity.GuideActivity;
-import com.moko.mkremotegw.dialog.LoadingDialog;
-import com.moko.mkremotegw.dialog.LoadingMessageDialog;
-import com.moko.support.remotegw.entity.MsgConfigReq;
-import com.moko.support.remotegw.entity.MsgDeviceInfo;
-import com.moko.support.remotegw.entity.MsgReadReq;
-import com.moko.support.remotegw.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.entity.MsgConfigReq;
+import com.moko.lib.mqtt.entity.MsgDeviceInfo;
+import com.moko.lib.mqtt.entity.MsgReadReq;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

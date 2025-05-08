@@ -8,9 +8,9 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.mkremotegw.R;
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.ActivityAboutBinding;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.mkremotegw.utils.Utils;
-import com.moko.support.remotegw.event.MQTTConnectionCompleteEvent;
+import com.moko.lib.mqtt.event.MQTTConnectionCompleteEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

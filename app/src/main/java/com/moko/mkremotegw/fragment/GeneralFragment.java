@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.FragmentGeneralAppBinding;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 
 import androidx.fragment.app.Fragment;
 

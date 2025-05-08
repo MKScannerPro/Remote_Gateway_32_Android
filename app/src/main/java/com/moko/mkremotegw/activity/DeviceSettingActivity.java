@@ -23,20 +23,20 @@ import com.moko.mkremotegw.R;
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.ActivityDeviceSettingRemoteBinding;
 import com.moko.mkremotegw.db.DBTools;
-import com.moko.mkremotegw.dialog.AlertMessageDialog;
-import com.moko.mkremotegw.dialog.CustomDialog;
+import com.moko.lib.scannerui.dialog.AlertMessageDialog;
+import com.moko.lib.scannerui.dialog.CustomDialog;
 import com.moko.mkremotegw.entity.MQTTConfig;
 import com.moko.mkremotegw.entity.MokoDevice;
 import com.moko.mkremotegw.utils.SPUtiles;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.remotegw.MQTTConstants;
-import com.moko.support.remotegw.MQTTSupport;
-import com.moko.support.remotegw.entity.MsgConfigResult;
-import com.moko.support.remotegw.entity.MsgReadResult;
-import com.moko.support.remotegw.event.DeviceDeletedEvent;
-import com.moko.support.remotegw.event.DeviceModifyNameEvent;
-import com.moko.support.remotegw.event.DeviceOnlineEvent;
-import com.moko.support.remotegw.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.MQTTSupport;
+import com.moko.lib.mqtt.entity.MsgConfigResult;
+import com.moko.lib.mqtt.entity.MsgReadResult;
+import com.moko.lib.mqtt.event.DeviceDeletedEvent;
+import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -114,7 +114,7 @@ public class DeviceSettingActivity extends BaseActivity<ActivityDeviceSettingRem
             int advState = result.data.get("adv_state").getAsInt();
             mIsAdvStateOpen = advState == 1;
             Drawable dra = ContextCompat.getDrawable(this, advState == 0 ?
-                    R.drawable.ic_cb_close : R.drawable.ic_cb_open);
+                    R.drawable.ic_checkbox_close : R.drawable.ic_checkbox_open);
             dra.setBounds(0, 0, dra.getIntrinsicWidth(), dra.getIntrinsicHeight());;
             mBind.tvAdvState.setCompoundDrawables(null, null, dra, null);
         }

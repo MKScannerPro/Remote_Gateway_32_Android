@@ -14,9 +14,9 @@ import android.widget.CompoundButton;
 import com.moko.mkremotegw.R;
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.FragmentSslAppBinding;
-import com.moko.mkremotegw.dialog.BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 import com.moko.mkremotegw.utils.FileUtils;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;

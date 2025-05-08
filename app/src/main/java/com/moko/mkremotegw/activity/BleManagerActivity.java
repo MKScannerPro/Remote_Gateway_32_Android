@@ -12,27 +12,27 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.moko.lib.scannerui.dialog.PasswordBleDialog;
 import com.moko.mkremotegw.AppConstants;
 import com.moko.mkremotegw.adapter.BleDeviceAdapter;
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.ActivityBleDevicesBinding;
 import com.moko.mkremotegw.db.DBTools;
-import com.moko.mkremotegw.dialog.PasswordRemoteBleDialog;
-import com.moko.mkremotegw.dialog.ScanFilterDialog;
+import com.moko.lib.scannerui.dialog.ScanFilterDialog;
 import com.moko.mkremotegw.entity.MQTTConfig;
 import com.moko.mkremotegw.entity.MokoDevice;
 import com.moko.mkremotegw.utils.SPUtiles;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.remotegw.MQTTConstants;
-import com.moko.support.remotegw.MQTTSupport;
+import com.moko.lib.mqtt.MQTTSupport;
 import com.moko.support.remotegw.MokoSupport;
 import com.moko.support.remotegw.entity.BXPButtonInfo;
 import com.moko.support.remotegw.entity.BleDevice;
-import com.moko.support.remotegw.entity.MsgNotify;
+import com.moko.lib.mqtt.entity.MsgNotify;
 import com.moko.support.remotegw.entity.OtherDeviceInfo;
-import com.moko.support.remotegw.event.DeviceModifyNameEvent;
-import com.moko.support.remotegw.event.DeviceOnlineEvent;
-import com.moko.support.remotegw.event.MQTTMessageArrivedEvent;
+import com.moko.lib.mqtt.event.DeviceModifyNameEvent;
+import com.moko.lib.mqtt.event.DeviceOnlineEvent;
+import com.moko.lib.mqtt.event.MQTTMessageArrivedEvent;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
@@ -313,7 +313,7 @@ public class BleManagerActivity extends BaseActivity<ActivityBleDevicesBinding> 
         if (bleDevice.type_code == 7) {
             // BXP-Button
             // show password
-            final PasswordRemoteBleDialog dialog = new PasswordRemoteBleDialog();
+            final PasswordBleDialog dialog = new PasswordBleDialog();
             dialog.setOnPasswordClicked(password -> {
                 if (!MokoSupport.getInstance().isBluetoothOpen()) {
                     MokoSupport.getInstance().enableBluetooth();

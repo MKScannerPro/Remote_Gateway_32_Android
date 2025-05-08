@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 
 import com.moko.mkremotegw.activity.ModifyMQTTSettingsActivity;
 import com.moko.mkremotegw.databinding.FragmentSslDeviceUrlBinding;
-import com.moko.mkremotegw.dialog.BottomDialog;
+import com.moko.lib.scannerui.dialog.BottomDialog;
 
 import java.util.ArrayList;
 

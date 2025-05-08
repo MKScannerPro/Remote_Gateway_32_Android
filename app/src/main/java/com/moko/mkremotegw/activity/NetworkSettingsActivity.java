@@ -13,7 +13,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.mkremotegw.base.BaseActivity;
 import com.moko.mkremotegw.databinding.ActivityNetworkSettingsBinding;
-import com.moko.mkremotegw.utils.ToastUtils;
+import com.moko.lib.scannerui.utils.ToastUtils;
 import com.moko.support.remotegw.MokoSupport;
 import com.moko.support.remotegw.OrderTaskAssembler;
 import com.moko.support.remotegw.entity.OrderCHAR;

@@ -18,7 +18,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -37,7 +37,7 @@
             android:onClick="setAppMQTTConfig"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:src="@drawable/settings" />
+            android:src="@drawable/ic_settings" />
 
         <View
             style="@style/divider_line"
@@ -77,10 +77,45 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/empty_device" />
+                android:src="@drawable/ic_empty_device" />
         </RelativeLayout>
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="53dp"
+        android:layout_marginRight="53dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/shape_corner_btn_bg"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="subscribe"
+            android:text="Subscribe"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+
+        <View
+            style="@style/divider_line_vertical"
+            android:background="@color/white_ffffff" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="unsubscribe"
+            android:text="UnSubscribe"
+            android:textColor="@color/white_ffffff"
+            android:textSize="15sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
