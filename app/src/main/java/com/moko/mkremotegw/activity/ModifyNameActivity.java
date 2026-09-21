@@ -73,11 +73,7 @@ public class ModifyNameActivity extends BaseActivity<ActivityModifyDeviceNameBin
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
